@@ -1,26 +1,36 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pathlib import Path
+import os
 
 app = FastAPI(title="Audio Distribution Portal")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    with open("templates/login.html") as f:
-        return f.read()
+    try:
+        with open("templates/login.html") as f:
+            return f.read()
+    except:
+        return "<h1>Login page not found</h1>"
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard():
-    with open("templates/index.html") as f:
-        return f.read()
+    try:
+        with open("templates/index.html") as f:
+            return f.read()
+    except:
+        return "<h1>Dashboard not found</h1>"
 
 @app.get("/admin", response_class=HTMLResponse)
 def admin_portal():
-    with open("templates/admin.html") as f:
-        return f.read()
+    try:
+        with open("templates/admin.html") as f:
+            return f.read()
+    except Exception as e:
+        return f"<h1>Admin portal error: {str(e)}</h1>"
 
 if __name__ == "__main__":
     import uvicorn
