@@ -30,12 +30,14 @@ if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
-def home():
+async def home():
     try:
-        with open("templates/login.html") as f:
-            return f.read()
-    except:
-        return "<h1>Login page not found</h1>"
+        with open("templates/login.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Login page not found</h1>", status_code=404)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard():
@@ -58,12 +60,14 @@ async def upload_page():
         return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
 @app.get("/admin", response_class=HTMLResponse)
-def admin_portal():
+async def admin_portal():
     try:
-        with open("templates/admin.html") as f:
-            return f.read()
+        with open("templates/admin.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Admin portal not found</h1>", status_code=404)
     except Exception as e:
-        return f"<h1>Admin portal error: {str(e)}</h1>"
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
 if __name__ == "__main__":
     import uvicorn
