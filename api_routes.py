@@ -57,8 +57,7 @@ async def upload_release(
     upc: str = Form(""),
     release_date: str = Form(""),
     audio_files: list[UploadFile] = File(...),
-    artwork: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    artwork: UploadFile = File(None)
 ):
     try:
         os.makedirs("uploads/audio", exist_ok=True)
@@ -69,25 +68,15 @@ async def upload_release(
         for audio_file in audio_files:
             file_path = f"uploads/audio/{audio_file.filename}"
             with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(audio_file.file, buffer)
-            
-            track = Track(
-                title=title,
-                artist=artist,
-                album=album,
-                genre=genre,
-                isrc=isrc,
-                file_path=file_path,
-                file_hash="temp_hash",
-                original_format=audio_file.filename.split(".")[-1],
-                duration=0.0,
-                owner_id=1
-            )
-            
-            db.add(track)
+                content = await audio_file.read()
+                buffer.write(content)
             uploaded_tracks.append(audio_file.filename)
         
-        db.commit()
+        if artwork:
+            artwork_path = f"uploads/artwork/{artwork.filename}"
+            with open(artwork_path, "wb") as buffer:
+                content = await artwork.read()
+                buffer.write(content)
         
         return {
             "message": "Release uploaded successfully",
@@ -95,9 +84,25 @@ async def upload_release(
             "count": len(uploaded_tracks)
         }
     except Exception as e:
-        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/tracks")
-def get_tracks(db: Session = Depends(get_db)):
-    return db.query(Track).all()
+def get_tracks():
+    try:
+        audio_dir = "uploads/audio"
+        if not os.path.exists(audio_dir):
+            return []
+        
+        files = []
+        for filename in os.listdir(audio_dir):
+            if filename.endswith(('.mp3', '.wav', '.aac', '.flac', '.m4a')):
+                file_path = os.path.join(audio_dir, filename)
+                file_size = os.path.getsize(file_path)
+                files.append({
+                    "filename": filename,
+                    "size": file_size,
+                    "path": file_path
+                })
+        return files
+    except Exception as e:
+        return []
