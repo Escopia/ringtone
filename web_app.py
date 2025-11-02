@@ -9,6 +9,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def home():
+    with open("templates/login.html") as f:
+        return f.read()
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard():
     with open("templates/index.html") as f:
         return f.read()
 

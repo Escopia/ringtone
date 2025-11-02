@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Distribution Portal</title>
+    <title>Dashboard - Escopia Distribution</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">🎵 Escopia</div>
+        <div class="logo"><span style="font-size: 32px;">🎵</span> Escopia</div>
         <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
         <div class="nav-item" onclick="showSection('upload')">⬆️ Upload</div>
         <div class="nav-item" onclick="showSection('tracks')">🎵 My Tracks</div>
@@ -57,7 +57,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="5" style="text-align: center; color: #8b92a7;">No activity yet. Upload your first track!</td>
+                            <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">No activity yet. Upload your first track!</td>
                         </tr>
                     </tbody>
                 </table>
@@ -71,37 +71,37 @@
 
             <div class="upload-section">
                 <h2>Drag & Drop Audio File</h2>
-                <p style="color: #8b92a7; margin: 20px 0;">or click to browse</p>
+                <p style="color: #9ca3af; margin: 20px 0;">or click to browse</p>
                 <input type="file" id="audioFile" accept="audio/*" style="display: none;">
                 <button class="btn-primary" onclick="document.getElementById('audioFile').click()">Choose File</button>
             </div>
 
-            <div style="background: #1a1f2e; padding: 30px; border-radius: 12px;">
+            <div style="background: #fff; padding: 32px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                 <h3 style="margin-bottom: 20px;">Track Details</h3>
                 <form id="uploadForm">
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Title</label>
-                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Title</label>
+                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Artist</label>
-                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Artist</label>
+                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Album (Optional)</label>
-                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Album (Optional)</label>
+                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Genre</label>
-                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Genre</label>
+                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">ISRC (Optional)</label>
-                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">ISRC (Optional)</label>
+                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Artwork</label>
-                        <input type="file" accept="image/*" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Artwork</label>
+                        <input type="file" accept="image/*" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <button type="submit" class="btn-primary">Upload Track</button>
                 </form>
@@ -116,9 +116,15 @@
 
             <div class="upload-section">
                 <h2>Upload CSV File</h2>
-                <p style="color: #8b92a7; margin: 20px 0;">Upload your CSV with track metadata</p>
+                <p style="color: #9ca3af; margin: 20px 0;">Upload your CSV with track metadata</p>
                 <input type="file" id="csvFile" accept=".csv" style="display: none;">
                 <button class="btn-primary" onclick="document.getElementById('csvFile').click()">Choose CSV</button>
+            </div>
+
+            <div style="background: #fff; padding: 32px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <h3>CSV Format</h3>
+                <p style="color: #6b7280; margin: 10px 0;">Required columns: title, artist, audio_filename</p>
+                <p style="color: #6b7280;">Optional: album, genre, isrc, artwork_filename</p>
             </div>
         </div>
     </div>
