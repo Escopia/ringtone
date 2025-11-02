@@ -69,6 +69,26 @@ async def admin_portal():
     except Exception as e:
         return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
+@app.get("/analytics", response_class=HTMLResponse)
+async def analytics_page():
+    try:
+        with open("templates/analytics.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Analytics page not found</h1>", status_code=404)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
+
+@app.get("/accounting", response_class=HTMLResponse)
+async def accounting_page():
+    try:
+        with open("templates/accounting.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Accounting page not found</h1>", status_code=404)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
+
 if __name__ == "__main__":
     import uvicorn
     print("\n🎵 Audio Distribution Portal")
