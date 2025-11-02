@@ -43,19 +43,25 @@ async function uploadTrack(event) {
         });
         
         xhr.addEventListener('load', () => {
-            if (xhr.status === 200) {
+            if (xhr.status === 200 || xhr.status === 201) {
                 alert('Track uploaded successfully!');
                 event.target.reset();
                 uploadedFile = null;
                 document.getElementById('fileInfo').style.display = 'none';
                 progressContainer.style.display = 'none';
                 progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
             } else {
-                alert('Upload failed: ' + xhr.responseText);
+                alert('Upload failed. Please try again.');
+                console.error('Upload error:', xhr.responseText);
             }
         });
         
-        xhr.open('POST', '/api/tracks/upload');
+        xhr.addEventListener('error', () => {
+            alert('Network error. Please check your connection.');
+        });
+        
+        xhr.open('POST', '/api/tracks');
         xhr.send(formData);
         
     } catch (error) {

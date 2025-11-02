@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Release - Escopia</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/wizard.css">
+</head>
+<body>
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <h1>Create New Release</h1>
+            <div class="wizard-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Upload Files</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Release Info</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Territories</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Stores & Date</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-content">
+            <!-- Phase 1: Upload Files -->
+            <div id="phase1" class="wizard-phase active">
+                <h2>Upload Audio & Artwork</h2>
+                <div class="upload-zone">
+                    <input type="file" id="audioFiles" multiple accept="audio/*" style="display: none;">
+                    <button class="btn-primary" onclick="document.getElementById('audioFiles').click()">Select Audio Files</button>
+                    <div id="audioList" style="margin-top: 20px;"></div>
+                </div>
+                <div class="upload-zone" style="margin-top: 30px;">
+                    <input type="file" id="artworkFile" accept="image/*" style="display: none;">
+                    <button class="btn-primary" onclick="document.getElementById('artworkFile').click()">Select Artwork</button>
+                    <div id="artworkPreview" style="margin-top: 20px;"></div>
+                </div>
+                <button class="btn-primary" onclick="processFiles()" style="margin-top: 30px;">Process & Continue</button>
+            </div>
+
+            <!-- Phase 2: Release Metadata -->
+            <div id="phase2" class="wizard-phase">
+                <h2>Release Information</h2>
+                <div id="trackList" style="margin-bottom: 30px;"></div>
+                
+                <form id="releaseForm">
+                    <div class="form-group">
+                        <label>Artist Profile</label>
+                        <select id="artistProfile" onchange="handleArtistChange()">
+                            <option value="">Select Artist</option>
+                            <option value="new">+ Create New Artist</option>
+                        </select>
+                    </div>
+                    
+                    <div id="newArtistForm" style="display: none;">
+                        <div class="form-group">
+                            <label>Artist Name</label>
+                            <input type="text" id="newArtistName">
+                        </div>
+                        <div class="form-group">
+                            <label>Spotify ID <span class="tooltip">ℹ️<span class="tooltiptext">Click to visit Spotify</span></span></label>
+                            <input type="text" id="spotifyId" onclick="window.open('https://open.spotify.com', '_blank')">
+                        </div>
+                        <div class="form-group">
+                            <label>Apple Music ID</label>
+                            <input type="text" id="appleMusicId" onclick="window.open('https://music.apple.com', '_blank')">
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube ID</label>
+                            <input type="text" id="youtubeId" onclick="window.open('https://youtube.com', '_blank')">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Label</label>
+                        <select id="labelSelect">
+                            <option value="">Select Label</option>
+                            <option value="new">+ Create New Label</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Release Title</label>
+                        <input type="text" id="releaseTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>UPC</label>
+                        <input type="text" id="upc">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Main Genre</label>
+                        <select id="mainGenre">
+                            <option>Pop</option>
+                            <option>Rock</option>
+                            <option>Hip Hop</option>
+                            <option>Electronic</option>
+                            <option>R&B</option>
+                            <option>Jazz</option>
+                            <option>Classical</option>
+                            <option>Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sub-Genre</label>
+                        <select id="subGenre">
+                            <option>Alternative</option>
+                            <option>Indie</option>
+                            <option>Dance</option>
+                            <option>Soul</option>
+                        </select>
+                    </div>
+                </form>
+
+                <button class="btn-primary" onclick="saveAndContinue(3)">Save & Continue</button>
+            </div>
+
+            <!-- Phase 3: Territories -->
+            <div id="phase3" class="wizard-phase">
+                <h2>Select Territories</h2>
+                <div class="territory-grid">
+                    <label><input type="checkbox" value="worldwide" onchange="toggleWorldwide(this)"> Worldwide</label>
+                    <label><input type="checkbox" value="ZA"> South Africa</label>
+                    <label><input type="checkbox" value="US"> United States</label>
+                    <label><input type="checkbox" value="GB"> United Kingdom</label>
+                    <label><input type="checkbox" value="NG"> Nigeria</label>
+                    <label><input type="checkbox" value="KE"> Kenya</label>
+                </div>
+                <button class="btn-primary" onclick="saveAndContinue(4)">Save & Continue</button>
+            </div>
+
+            <!-- Phase 4: Stores & Release Date -->
+            <div id="phase4" class="wizard-phase">
+                <h2>Select Stores & Release Date</h2>
+                <div class="store-selection">
+                    <label class="store-item">
+                        <input type="checkbox" value="mtn">
+                        <span>MTN</span>
+                        <input type="date" class="release-date">
+                    </label>
+                    <label class="store-item">
+                        <input type="checkbox" value="vodacom">
+                        <span>Vodacom</span>
+                        <input type="date" class="release-date">
+                    </label>
+                    <label class="store-item">
+                        <input type="checkbox" value="telkom">
+                        <span>Telkom</span>
+                        <input type="date" class="release-date">
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 30px;">
+                    <label><input type="checkbox" id="enablePreorder"> Enable Pre-order</label>
+                    <input type="date" id="preorderDate" style="display: none; margin-top: 10px;">
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="enableInstantGrat"> Instant Gratification Track</label>
+                    <select id="instantGratTrack" style="display: none; margin-top: 10px;"></select>
+                </div>
+
+                <button class="btn-primary" onclick="submitRelease()">Submit Release</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="trackMetadataModal" class="modal">
+        <div class="modal-content">
+            <h2>Track Metadata</h2>
+            <form id="trackMetadataForm">
+                <div class="form-group">
+                    <label>ISRC Code</label>
+                    <input type="text" id="trackIsrc">
+                </div>
+                <div class="form-group">
+                    <label>Composer</label>
+                    <input type="text" id="composer">
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" id="author">
+                </div>
+                <div class="form-group">
+                    <label>Producer</label>
+                    <input type="text" id="producer">
+                </div>
+                <div class="form-group">
+                    <label>Time-code</label>
+                    <input type="text" id="timecode">
+                </div>
+                <div class="form-group">
+                    <label>Lyrics</label>
+                    <textarea id="lyrics" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mastering Engineer</label>
+                    <input type="text" id="masteringEngineer">
+                </div>
+                <div class="form-group">
+                    <label>Mixing Engineer</label>
+                    <input type="text" id="mixingEngineer">
+                </div>
+                <button type="button" class="btn-primary" onclick="saveTrackMetadata()">Save</button>
+                <button type="button" class="btn-secondary" onclick="closeTrackModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/wizard.js"></script>
+</body>
+</html>
