@@ -17,6 +17,11 @@ def dashboard():
     with open("templates/index.html") as f:
         return f.read()
 
+@app.get("/admin", response_class=HTMLResponse)
+def admin_portal():
+    with open("templates/admin.html") as f:
+        return f.read()
+
 if __name__ == "__main__":
     import uvicorn
     print("\n🎵 Audio Distribution Portal")

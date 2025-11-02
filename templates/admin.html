@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Escopia</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><span style="font-size: 28px; color: #7c3aed;">▲</span> Admin</div>
+        <div class="nav-item active" onclick="showSection('pending')">Pending Releases</div>
+        <div class="nav-item" onclick="showSection('stores')">Store APIs</div>
+        <div class="nav-item" onclick="showSection('deliveries')">Deliveries</div>
+        <div class="nav-item" onclick="showSection('statements')">Statements</div>
+        <div class="nav-item" onclick="showSection('artists')">Artist Profiles</div>
+        <div class="nav-item" onclick="showSection('users')">Users</div>
+    </div>
+
+    <div class="main-content">
+        <div id="pending" class="section">
+            <div class="header">
+                <h1>Pending Releases</h1>
+            </div>
+
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Artist</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingReleases">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">No pending releases</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="stores" class="section" style="display: none;">
+            <div class="header">
+                <h1>Store APIs</h1>
+                <button class="btn-primary" onclick="showAddStoreModal()">+ Add Store</button>
+            </div>
+
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Store</th>
+                            <th>API URL</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="storesList">
+                        <tr>
+                            <td>MTN</td>
+                            <td>https://api.mtn.com/v1</td>
+                            <td><span style="color: #10b981;">Active</span></td>
+                            <td><button class="btn-secondary" onclick="editStore('mtn')">Edit</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="deliveries" class="section" style="display: none;">
+            <div class="header">
+                <h1>Delivery Management</h1>
+            </div>
+
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Store</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deliveriesList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">No deliveries</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="statements" class="section" style="display: none;">
+            <div class="header">
+                <h1>Statements</h1>
+                <button class="btn-primary" onclick="showCreateStatementModal()">+ Create Statement</button>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <input type="text" placeholder="Filter by user email or profile ID" style="width: 300px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;">
+            </div>
+
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Period</th>
+                            <th>Revenue</th>
+                            <th>Plays</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statementsList">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #9ca3af; padding: 40px;">No statements</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="artists" class="section" style="display: none;">
+            <div class="header">
+                <h1>Artist Profiles</h1>
+                <button class="btn-primary" onclick="showMapArtistModal()">+ Map Artist</button>
+            </div>
+
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Artist</th>
+                            <th>Spotify ID</th>
+                            <th>Apple Music ID</th>
+                            <th>YouTube ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="artistsList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #9ca3af; padding: 40px;">No artist profiles</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <h2>Review Release</h2>
+            <div id="releaseDetails" style="margin: 20px 0;"></div>
+            <div style="margin: 20px 0;">
+                <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">UPC (Optional)</label>
+                <input id="upcInput" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;">
+            </div>
+            <div style="margin: 20px 0;">
+                <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Feedback (if rejecting)</label>
+                <textarea id="feedbackInput" rows="4" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                <button class="btn-secondary" style="background: #ef4444; color: white;" onclick="rejectRelease()">Reject</button>
+                <button class="btn-primary" onclick="approveRelease()">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/admin.js"></script>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(section).style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
