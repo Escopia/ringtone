@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Distribution Portal</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">🎵 Escopia</div>
+        <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+        <div class="nav-item" onclick="showSection('upload')">⬆️ Upload</div>
+        <div class="nav-item" onclick="showSection('tracks')">🎵 My Tracks</div>
+        <div class="nav-item" onclick="showSection('deliveries')">🚀 Deliveries</div>
+        <div class="nav-item" onclick="showSection('analytics')">📈 Analytics</div>
+        <div class="nav-item" onclick="showSection('bulk')">📦 Bulk Upload</div>
+    </div>
+
+    <div class="main-content">
+        <div id="dashboard" class="section">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <button class="btn-primary" onclick="showSection('upload')">+ Upload Track</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tracks</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">R 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Plays</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Deliveries</div>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+
+            <div class="tracks-table">
+                <h3 style="padding: 20px;">Recent Activity</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Artist</th>
+                            <th>Store</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #8b92a7;">No activity yet. Upload your first track!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="upload" class="section" style="display: none;">
+            <div class="header">
+                <h1>Upload Track</h1>
+            </div>
+
+            <div class="upload-section">
+                <h2>Drag & Drop Audio File</h2>
+                <p style="color: #8b92a7; margin: 20px 0;">or click to browse</p>
+                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('audioFile').click()">Choose File</button>
+            </div>
+
+            <div style="background: #1a1f2e; padding: 30px; border-radius: 12px;">
+                <h3 style="margin-bottom: 20px;">Track Details</h3>
+                <form id="uploadForm">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Title</label>
+                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Artist</label>
+                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Album (Optional)</label>
+                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Genre</label>
+                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">ISRC (Optional)</label>
+                        <input type="text" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #8b92a7;">Artwork</label>
+                        <input type="file" accept="image/*" style="width: 100%; padding: 12px; background: #0f1419; border: 1px solid #2a2f3e; border-radius: 8px; color: #fff;">
+                    </div>
+                    <button type="submit" class="btn-primary">Upload Track</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="bulk" class="section" style="display: none;">
+            <div class="header">
+                <h1>Bulk Upload</h1>
+                <a href="/tracks/bulk-template" class="btn-primary" download>Download Template</a>
+            </div>
+
+            <div class="upload-section">
+                <h2>Upload CSV File</h2>
+                <p style="color: #8b92a7; margin: 20px 0;">Upload your CSV with track metadata</p>
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('csvFile').click()">Choose CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(section).style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
