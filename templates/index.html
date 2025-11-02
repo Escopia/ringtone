@@ -71,37 +71,46 @@
 
             <div class="upload-section">
                 <h2>Drag & Drop Audio File</h2>
-                <p style="color: #9ca3af; margin: 20px 0;">or click to browse</p>
-                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                <p style="color: #9ca3af; margin: 20px 0;">Supports: MP3, WAV, AAC, FLAC, OGG, M4A</p>
+                <input type="file" id="audioFile" accept="audio/*" style="display: none;" onchange="handleFileSelect(event)">
                 <button class="btn-primary" onclick="document.getElementById('audioFile').click()">Choose File</button>
+                
+                <div id="fileInfo" class="file-info">
+                    <strong id="fileName"></strong><br>
+                    <span id="fileSize" style="color: #6b7280;"></span>
+                </div>
+                
+                <div id="progressContainer" class="progress-container">
+                    <div id="uploadProgress" class="progress-bar" style="width: 0%;">0%</div>
+                </div>
             </div>
 
             <div style="background: #fff; padding: 32px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                 <h3 style="margin-bottom: 20px;">Track Details</h3>
-                <form id="uploadForm">
+                <form id="uploadForm" onsubmit="uploadTrack(event)">
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Title</label>
-                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Title*</label>
+                        <input name="title" type="text" required style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Artist</label>
-                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Artist*</label>
+                        <input name="artist" type="text" required style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Album (Optional)</label>
-                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <input name="album" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Genre</label>
-                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <input name="genre" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">ISRC (Optional)</label>
-                        <input type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <input name="isrc" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Artwork</label>
-                        <input type="file" accept="image/*" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
+                        <input name="artwork" type="file" accept="image/*" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; color: #1a1a1a;">
                     </div>
                     <button type="submit" class="btn-primary">Upload Track</button>
                 </form>
@@ -129,6 +138,44 @@
         </div>
     </div>
 
+    <div id="distributionModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Distribute Track</h2>
+            <form onsubmit="submitDistribution(event)">
+                <p style="color: #6b7280; margin-bottom: 20px;">Select stores to distribute your track:</p>
+                
+                <label class="store-checkbox">
+                    <input type="checkbox" name="stores" value="mtn">
+                    <div>
+                        <strong>MTN</strong><br>
+                        <small style="color: #6b7280;">MP3 • 128k • 30s max</small>
+                    </div>
+                </label>
+                
+                <label class="store-checkbox">
+                    <input type="checkbox" name="stores" value="vodacom">
+                    <div>
+                        <strong>Vodacom</strong><br>
+                        <small style="color: #6b7280;">AAC • 96k • 45s max</small>
+                    </div>
+                </label>
+                
+                <label class="store-checkbox">
+                    <input type="checkbox" name="stores" value="telkom">
+                    <div>
+                        <strong>Telkom</strong><br>
+                        <small style="color: #6b7280;">MP3 • 192k • 60s max</small>
+                    </div>
+                </label>
+                
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="closeDistributionForm()">Cancel</button>
+                    <button type="submit" class="btn-primary">Distribute</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function showSection(section) {
             document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
@@ -137,5 +184,6 @@
             event.target.classList.add('active');
         }
     </script>
+    <script src="/static/js/upload.js"></script>
 </body>
 </html>
