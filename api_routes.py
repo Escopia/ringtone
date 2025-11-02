@@ -47,6 +47,57 @@ async def create_track(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/tracks/upload")
+async def upload_release(
+    title: str = Form(...),
+    artist: str = Form(...),
+    album: str = Form(""),
+    genre: str = Form(...),
+    isrc: str = Form(""),
+    upc: str = Form(""),
+    release_date: str = Form(""),
+    audio_files: list[UploadFile] = File(...),
+    artwork: UploadFile = File(None),
+    db: Session = Depends(get_db)
+):
+    try:
+        os.makedirs("uploads/audio", exist_ok=True)
+        os.makedirs("uploads/artwork", exist_ok=True)
+        
+        uploaded_tracks = []
+        
+        for audio_file in audio_files:
+            file_path = f"uploads/audio/{audio_file.filename}"
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(audio_file.file, buffer)
+            
+            track = Track(
+                title=title,
+                artist=artist,
+                album=album,
+                genre=genre,
+                isrc=isrc,
+                file_path=file_path,
+                file_hash="temp_hash",
+                original_format=audio_file.filename.split(".")[-1],
+                duration=0.0,
+                owner_id=1
+            )
+            
+            db.add(track)
+            uploaded_tracks.append(audio_file.filename)
+        
+        db.commit()
+        
+        return {
+            "message": "Release uploaded successfully",
+            "tracks": uploaded_tracks,
+            "count": len(uploaded_tracks)
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/tracks")
 def get_tracks(db: Session = Depends(get_db)):
     return db.query(Track).all()

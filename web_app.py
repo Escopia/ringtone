@@ -38,20 +38,24 @@ def home():
         return "<h1>Login page not found</h1>"
 
 @app.get("/dashboard", response_class=HTMLResponse)
-def dashboard():
+async def dashboard():
     try:
-        with open("templates/index.html") as f:
-            return f.read()
-    except:
-        return "<h1>Dashboard not found</h1>"
+        with open("templates/dashboard_modern.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Dashboard not found</h1>", status_code=404)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
 @app.get("/upload", response_class=HTMLResponse)
-def upload_wizard():
+async def upload_page():
     try:
-        with open("templates/upload_wizard.html") as f:
-            return f.read()
+        with open("templates/upload_modern.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Upload page not found</h1>", status_code=404)
     except Exception as e:
-        return f"<h1>Upload wizard error: {str(e)}</h1>"
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=500)
 
 @app.get("/admin", response_class=HTMLResponse)
 def admin_portal():

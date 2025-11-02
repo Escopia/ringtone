@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Release - Escopia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .upload-zone {
+            border: 3px dashed #d1d5db;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .upload-zone:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-zone.dragover {
+            border-color: #667eea;
+            background: #e0e7ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .upload-zone h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .upload-zone p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .file-list {
+            margin-top: 30px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            font-size: 32px;
+        }
+
+        .file-details h4 {
+            font-size: 16px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .file-details p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .remove-btn:hover {
+            background: #dc2626;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #ef4444;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .artwork-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .artwork-preview img {
+            max-width: 300px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🎵 Upload Your Release</h1>
+            <p>Share your music with the world</p>
+        </div>
+
+        <div class="card">
+            <div class="upload-zone" id="audioUploadZone" onclick="document.getElementById('audioInput').click()">
+                <div class="upload-icon">🎵</div>
+                <h3>Upload Audio Files</h3>
+                <p>Drag & drop or click to select MP3, WAV, AAC, FLAC files</p>
+                <input type="file" id="audioInput" multiple accept="audio/*" style="display: none;">
+            </div>
+            <div id="audioFileList" class="file-list"></div>
+        </div>
+
+        <div class="card">
+            <div class="upload-zone" id="artworkUploadZone" onclick="document.getElementById('artworkInput').click()">
+                <div class="upload-icon">🖼️</div>
+                <h3>Upload Artwork</h3>
+                <p>Drag & drop or click to select JPG, PNG (min 3000x3000px)</p>
+                <input type="file" id="artworkInput" accept="image/*" style="display: none;">
+            </div>
+            <div id="artworkPreview" class="artwork-preview"></div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 30px; color: #1f2937;">Release Details</h2>
+            <form id="releaseForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Release Title *</label>
+                        <input type="text" id="title" required placeholder="Enter release title">
+                    </div>
+                    <div class="form-group">
+                        <label>Artist Name *</label>
+                        <input type="text" id="artist" required placeholder="Enter artist name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Album / EP Name</label>
+                        <input type="text" id="album" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre *</label>
+                        <select id="genre" required>
+                            <option value="">Select genre</option>
+                            <option value="Pop">Pop</option>
+                            <option value="Rock">Rock</option>
+                            <option value="Hip Hop">Hip Hop</option>
+                            <option value="Electronic">Electronic</option>
+                            <option value="R&B">R&B</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Classical">Classical</option>
+                            <option value="Country">Country</option>
+                            <option value="Afrobeat">Afrobeat</option>
+                            <option value="Amapiano">Amapiano</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ISRC Code</label>
+                        <input type="text" id="isrc" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>UPC / EAN</label>
+                        <input type="text" id="upc" placeholder="Optional">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Release Date</label>
+                    <input type="date" id="releaseDate">
+                </div>
+
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    🚀 Upload Release
+                </button>
+
+                <div class="success-message" id="successMessage">
+                    ✓ Release uploaded successfully!
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let audioFiles = [];
+        let artworkFile = null;
+
+        // Audio upload handling
+        const audioInput = document.getElementById('audioInput');
+        const audioUploadZone = document.getElementById('audioUploadZone');
+        const audioFileList = document.getElementById('audioFileList');
+
+        audioInput.addEventListener('change', (e) => {
+            handleAudioFiles(e.target.files);
+        });
+
+        audioUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            audioUploadZone.classList.add('dragover');
+        });
+
+        audioUploadZone.addEventListener('dragleave', () => {
+            audioUploadZone.classList.remove('dragover');
+        });
+
+        audioUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            audioUploadZone.classList.remove('dragover');
+            handleAudioFiles(e.dataTransfer.files);
+        });
+
+        function handleAudioFiles(files) {
+            audioFiles = Array.from(files);
+            displayAudioFiles();
+        }
+
+        function displayAudioFiles() {
+            audioFileList.innerHTML = '';
+            audioFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">🎵</div>
+                        <div class="file-details">
+                            <h4>${file.name}</h4>
+                            <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-btn" onclick="removeAudioFile(${index})">Remove</button>
+                `;
+                audioFileList.appendChild(fileItem);
+            });
+        }
+
+        function removeAudioFile(index) {
+            audioFiles.splice(index, 1);
+            displayAudioFiles();
+        }
+
+        // Artwork upload handling
+        const artworkInput = document.getElementById('artworkInput');
+        const artworkUploadZone = document.getElementById('artworkUploadZone');
+        const artworkPreview = document.getElementById('artworkPreview');
+
+        artworkInput.addEventListener('change', (e) => {
+            handleArtworkFile(e.target.files[0]);
+        });
+
+        artworkUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            artworkUploadZone.classList.add('dragover');
+        });
+
+        artworkUploadZone.addEventListener('dragleave', () => {
+            artworkUploadZone.classList.remove('dragover');
+        });
+
+        artworkUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            artworkUploadZone.classList.remove('dragover');
+            handleArtworkFile(e.dataTransfer.files[0]);
+        });
+
+        function handleArtworkFile(file) {
+            if (file && file.type.startsWith('image/')) {
+                artworkFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    artworkPreview.innerHTML = `<img src="${e.target.result}" alt="Artwork preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Form submission
+        document.getElementById('releaseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (audioFiles.length === 0) {
+                showError('Please upload at least one audio file');
+                return;
+            }
+
+            const formData = new FormData();
+            
+            // Add audio files
+            audioFiles.forEach(file => {
+                formData.append('audio_files', file);
+            });
+
+            // Add artwork
+            if (artworkFile) {
+                formData.append('artwork', artworkFile);
+            }
+
+            // Add metadata
+            formData.append('title', document.getElementById('title').value);
+            formData.append('artist', document.getElementById('artist').value);
+            formData.append('album', document.getElementById('album').value);
+            formData.append('genre', document.getElementById('genre').value);
+            formData.append('isrc', document.getElementById('isrc').value);
+            formData.append('upc', document.getElementById('upc').value);
+            formData.append('release_date', document.getElementById('releaseDate').value);
+
+            const submitBtn = document.getElementById('submitBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+            progressBar.style.display = 'block';
+
+            try {
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        progressFill.style.width = percent + '%';
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        showSuccess();
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 2000);
+                    } else {
+                        showError('Upload failed. Please try again.');
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🚀 Upload Release';
+                });
+
+                xhr.addEventListener('error', () => {
+                    showError('Network error. Please check your connection.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🚀 Upload Release';
+                });
+
+                xhr.open('POST', '/api/tracks/upload');
+                xhr.send(formData);
+
+            } catch (error) {
+                showError('Upload failed: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Upload Release';
+            }
+        });
+
+        function showSuccess() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

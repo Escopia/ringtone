@@ -25,3 +25,28 @@ INFO:     127.0.0.1:53153 - "GET /static/js/upload.js HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53154 - "GET /static/css/style.css HTTP/1.1" 304 Not Modified
 INFO:     127.0.0.1:53154 - "GET /upload HTTP/1.1" 404 Not Found
 INFO:     127.0.0.1:53153 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53213 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53213 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53213 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53213 - "GET /dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53213 - "GET /static/js/upload.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53214 - "GET /static/css/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53216 - "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53216 - "GET /apple-touch-icon.png HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53213 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53247 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53461 - "GET /upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53532 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53532 - "GET /admin HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53532 - "GET /static/css/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53542 - "GET /static/js/admin.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53547 - "POST /api/admin/accounting/upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53547 - "POST /api/admin/accounting/upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53547 - "POST /api/admin/accounting/upload HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53617 - "GET /admin HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53617 - "GET /static/css/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53618 - "GET /static/js/admin.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53617 - "GET /admin HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53624 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53626 - "GET /dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53626 - "GET /static/js/upload.js HTTP/1.1" 304 Not Modified
