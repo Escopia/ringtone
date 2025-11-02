@@ -58,7 +58,7 @@ class Track(Base):
     file_hash = Column(String, unique=True, index=True)
     original_format = Column(String)
     artwork_id = Column(Integer, ForeignKey("artworks.id"), nullable=True)
-    metadata = Column(JSON)
+    track_metadata = Column(JSON)
     status = Column(Enum(ReleaseStatus), default=ReleaseStatus.DRAFT)
     rejection_feedback = Column(String, nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -90,7 +90,7 @@ class Analytics(Base):
     downloads = Column(Integer, default=0)
     revenue = Column(Float, default=0.0)
     date = Column(DateTime, default=datetime.utcnow)
-    metadata = Column(JSON)
+    analytics_metadata = Column(JSON)
     track = relationship("Track", back_populates="analytics")
 
 class Transaction(Base):
@@ -101,7 +101,7 @@ class Transaction(Base):
     currency = Column(String, default="ZAR")
     transaction_date = Column(DateTime, default=datetime.utcnow)
     status = Column(String)
-    metadata = Column(JSON)
+    transaction_metadata = Column(JSON)
     delivery = relationship("Delivery", back_populates="transactions")
 
 class StoreAPI(Base):
@@ -122,7 +122,7 @@ class ArtistProfile(Base):
     spotify_id = Column(String, nullable=True)
     apple_music_id = Column(String, nullable=True)
     youtube_id = Column(String, nullable=True)
-    metadata = Column(JSON)
+    artist_metadata = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Statement(Base):
