@@ -10,11 +10,14 @@
     <div class="sidebar">
         <div class="logo"><span style="font-size: 28px; color: #7c3aed;">▲</span> Admin</div>
         <div class="nav-item active" onclick="showSection('pending')">Pending Releases</div>
+        <div class="nav-item" onclick="showSection('releases')">All Releases</div>
         <div class="nav-item" onclick="showSection('stores')">Store APIs</div>
         <div class="nav-item" onclick="showSection('deliveries')">Deliveries</div>
-        <div class="nav-item" onclick="showSection('statements')">Statements</div>
+        <div class="nav-item" onclick="showSection('accounting')">Accounting</div>
         <div class="nav-item" onclick="showSection('artists')">Artist Profiles</div>
         <div class="nav-item" onclick="showSection('users')">Users</div>
+        <div class="nav-item" onclick="showSection('labels')">Labels</div>
+        <div class="nav-item" onclick="showSection('settings')">Site Settings</div>
     </div>
 
     <div class="main-content">
@@ -124,6 +127,101 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div id="releases" class="section" style="display: none;">
+            <div class="header">
+                <h1>All Releases</h1>
+            </div>
+            <div id="releasesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;"></div>
+        </div>
+
+        <div id="accounting" class="section" style="display: none;">
+            <div class="header">
+                <h1>Accounting</h1>
+            </div>
+            <div style="background: #fff; padding: 32px; border-radius: 16px; margin-bottom: 20px;">
+                <h3>Upload Accounting CSV</h3>
+                <input type="file" id="accountingCSV" accept=".csv" style="margin: 20px 0;">
+                <button class="btn-primary" onclick="uploadAccountingCSV()">Upload & Process</button>
+            </div>
+            <div id="accountingResults" class="tracks-table" style="display: none;"></div>
+        </div>
+
+        <div id="users" class="section" style="display: none;">
+            <div class="header">
+                <h1>Users</h1>
+                <button class="btn-primary" onclick="showAddUserModal()">+ Add User</button>
+            </div>
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Admin</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="labels" class="section" style="display: none;">
+            <div class="header">
+                <h1>Labels</h1>
+                <button class="btn-primary" onclick="showAddLabelModal()">+ Add Label</button>
+            </div>
+            <div class="tracks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Owner</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="labelsList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="settings" class="section" style="display: none;">
+            <div class="header">
+                <h1>Site Settings</h1>
+            </div>
+            <div style="background: #fff; padding: 32px; border-radius: 16px;">
+                <form id="settingsForm" onsubmit="updateSettings(event)">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Site Title</label>
+                        <input name="site_title" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Site Description</label>
+                        <textarea name="site_description" rows="3" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Logo URL</label>
+                        <input name="logo_url" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Footer Text</label>
+                        <input name="footer_text" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Terms & Conditions</label>
+                        <textarea name="terms_conditions" rows="5" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #6b7280; font-weight: 500;">Ticket System URL</label>
+                        <input name="ticket_system_url" type="text" style="width: 100%; padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px;">
+                    </div>
+                    <button type="submit" class="btn-primary">Save Settings</button>
+                </form>
             </div>
         </div>
 

@@ -126,3 +126,97 @@ def map_artist(data: ArtistProfileCreate, admin: User = Depends(verify_admin), d
 @router.get("/artists")
 def get_artists(admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
     return db.query(ArtistProfile).all()
+
+@router.get("/releases/all")
+def get_all_releases(admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    return db.query(Track).all()
+
+@router.put("/releases/{release_id}")
+def update_release(release_id: int, data: dict, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    track = db.query(Track).filter(Track.id == release_id).first()
+    if not track:
+        raise HTTPException(status_code=404, detail="Release not found")
+    for key, value in data.items():
+        setattr(track, key, value)
+    db.commit()
+    return {"message": "Release updated"}
+
+@router.post("/users")
+def create_user(data: dict, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    from auth import get_password_hash
+    user = User(
+        email=data["email"],
+        hashed_password=get_password_hash(data["password"]),
+        full_name=data["fullName"],
+        is_admin=data.get("isAdmin", 0)
+    )
+    db.add(user)
+    db.commit()
+    return {"message": "User created"}
+
+@router.get("/users")
+def get_users(admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    return db.query(User).all()
+
+@router.put("/stores/{store_id}")
+def update_store(store_id: int, data: dict, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    store = db.query(StoreAPI).filter(StoreAPI.id == store_id).first()
+    if not store:
+        raise HTTPException(status_code=404, detail="Store not found")
+    for key, value in data.items():
+        setattr(store, key, value)
+    db.commit()
+    return {"message": "Store updated"}
+
+@router.post("/accounting/upload")
+async def upload_accounting_csv(file: UploadFile, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    import csv
+    import io
+    content = await file.read()
+    csv_data = csv.DictReader(io.StringIO(content.decode('utf-8')))
+    results = []
+    for row in csv_data:
+        artist_name = row.get('artist')
+        artist = db.query(ArtistProfile).filter(ArtistProfile.artist_name == artist_name).first()
+        results.append({"artist": artist_name, "assigned": bool(artist), "data": row})
+    return {"results": results}
+
+@router.post("/labels")
+def create_label(data: dict, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    from models import Label
+    label = Label(
+        name=data["name"],
+        owner_id=data["ownerId"],
+        description=data.get("description"),
+        logo_url=data.get("logoUrl")
+    )
+    db.add(label)
+    db.commit()
+    return {"message": "Label created"}
+
+@router.get("/labels")
+def get_labels(admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    from models import Label
+    return db.query(Label).all()
+
+@router.get("/settings")
+def get_settings(admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    from models import SiteSettings
+    settings = db.query(SiteSettings).first()
+    if not settings:
+        settings = SiteSettings()
+        db.add(settings)
+        db.commit()
+    return settings
+
+@router.put("/settings")
+def update_settings(data: dict, admin: User = Depends(verify_admin), db: Session = Depends(get_db)):
+    from models import SiteSettings
+    settings = db.query(SiteSettings).first()
+    if not settings:
+        settings = SiteSettings()
+        db.add(settings)
+    for key, value in data.items():
+        setattr(settings, key, value)
+    db.commit()
+    return {"message": "Settings updated"}

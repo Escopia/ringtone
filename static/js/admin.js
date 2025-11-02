@@ -153,3 +153,125 @@ async function mapArtist(data) {
         alert('Error mapping artist');
     }
 }
+
+function showAddUserModal() {
+    const email = prompt('Email:');
+    const password = prompt('Password:');
+    const fullName = prompt('Full Name:');
+    const isAdmin = confirm('Make admin?') ? 1 : 0;
+    
+    if (email && password && fullName) {
+        createUser({email, password, fullName, isAdmin});
+    }
+}
+
+async function createUser(data) {
+    try {
+        const response = await fetch('/api/admin/users', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            alert('User created');
+            location.reload();
+        }
+    } catch (error) {
+        alert('Error creating user');
+    }
+}
+
+function showAddLabelModal() {
+    const name = prompt('Label Name:');
+    const ownerId = prompt('Owner User ID:');
+    const description = prompt('Description (optional):');
+    
+    if (name && ownerId) {
+        createLabel({name, ownerId, description});
+    }
+}
+
+async function createLabel(data) {
+    try {
+        const response = await fetch('/api/admin/labels', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            alert('Label created');
+            location.reload();
+        }
+    } catch (error) {
+        alert('Error creating label');
+    }
+}
+
+async function uploadAccountingCSV() {
+    const fileInput = document.getElementById('accountingCSV');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Please select a CSV file');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/admin/accounting/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            displayAccountingResults(data.results);
+        }
+    } catch (error) {
+        alert('Error uploading CSV');
+    }
+}
+
+function displayAccountingResults(results) {
+    const container = document.getElementById('accountingResults');
+    let html = '<table><thead><tr><th>Artist</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    
+    results.forEach(r => {
+        const status = r.assigned ? '<span style="color: #10b981;">Assigned</span>' : '<span style="color: #f59e0b;">Unassigned</span>';
+        const action = r.assigned ? '' : '<button class="btn-primary" onclick="assignArtist(\'' + r.artist + '\')">Assign</button>';
+        html += `<tr><td>${r.artist}</td><td>${status}</td><td>${action}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    container.innerHTML = html;
+    container.style.display = 'block';
+}
+
+function assignArtist(artistName) {
+    const userId = prompt('Enter User ID to assign artist to:');
+    if (userId) {
+        mapArtist({artistName, userId});
+    }
+}
+
+async function updateSettings(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/admin/settings', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            alert('Settings updated');
+        }
+    } catch (error) {
+        alert('Error updating settings');
+    }
+}

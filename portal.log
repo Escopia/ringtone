@@ -28,3 +28,7 @@ INFO:     127.0.0.1:52621 - "GET /static/css/style.css HTTP/1.1" 304 Not Modifie
 INFO:     127.0.0.1:52637 - "GET /admin HTTP/1.1" 404 Not Found
 INFO:     127.0.0.1:52637 - "GET /admin HTTP/1.1" 404 Not Found
 INFO:     127.0.0.1:52637 - "GET /admin HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [22341]

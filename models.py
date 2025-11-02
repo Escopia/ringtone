@@ -136,3 +136,25 @@ class Statement(Base):
     status = Column(String, default="draft")
     statement_data = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class SiteSettings(Base):
+    __tablename__ = "site_settings"
+    id = Column(Integer, primary_key=True, index=True)
+    site_title = Column(String, default="Escopia Distribution")
+    site_description = Column(String)
+    logo_url = Column(String)
+    footer_text = Column(String)
+    terms_conditions = Column(String)
+    privacy_policy = Column(String)
+    support_email = Column(String)
+    ticket_system_url = Column(String)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+class Label(Base):
+    __tablename__ = "labels"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    description = Column(String)
+    logo_url = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
