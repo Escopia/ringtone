@@ -1,5 +1,3 @@
-from sklearn.cluster import KMeans
-import numpy as np
 from typing import Dict, List
 
 class AIProfiler:

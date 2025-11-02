@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     aws_access_key_id: str = ""
     aws_secret_access_key: str = ""
     s3_bucket: str = "ringtone-audio-files"
-    mtn_api_key: str = ""
+    mtn_consumer_key: str = ""
+    mtn_consumer_secret: str = ""
     mtn_api_url: str = "https://api.mtn.com/v1"
     
     class Config:

@@ -18,7 +18,7 @@ class StoreIntegration:
     @staticmethod
     async def _deliver_to_mtn(track_data: Dict, file_path: str) -> Dict:
         async with httpx.AsyncClient() as client:
-            headers = {"Authorization": f"Bearer {settings.mtn_api_key}"}
+            auth = (settings.mtn_consumer_key, settings.mtn_consumer_secret)
             
             with open(file_path, "rb") as f:
                 files = {"audio": f}
@@ -30,7 +30,7 @@ class StoreIntegration:
                 
                 response = await client.post(
                     f"{settings.mtn_api_url}/ringtones/upload",
-                    headers=headers,
+                    auth=auth,
                     data=data,
                     files=files,
                     timeout=60.0
@@ -58,10 +58,10 @@ class StoreIntegration:
     @staticmethod
     async def _fetch_mtn_analytics(track_id: str) -> Dict:
         async with httpx.AsyncClient() as client:
-            headers = {"Authorization": f"Bearer {settings.mtn_api_key}"}
+            auth = (settings.mtn_consumer_key, settings.mtn_consumer_secret)
             response = await client.get(
                 f"{settings.mtn_api_url}/ringtones/{track_id}/analytics",
-                headers=headers,
+                auth=auth,
                 timeout=30.0
             )
             
