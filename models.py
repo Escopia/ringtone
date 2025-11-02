@@ -15,12 +15,19 @@ class DeliveryStatus(enum.Enum):
     DELIVERED = "delivered"
     FAILED = "failed"
 
+class ReleaseStatus(enum.Enum):
+    DRAFT = "draft"
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     full_name = Column(String)
+    is_admin = Column(Integer, default=0)
     profile_data = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
     tracks = relationship("Track", back_populates="owner")
@@ -45,12 +52,15 @@ class Track(Base):
     album = Column(String, nullable=True)
     genre = Column(String, nullable=True)
     isrc = Column(String, unique=True, nullable=True, index=True)
+    upc = Column(String, nullable=True)
     duration = Column(Float)
     file_path = Column(String)
     file_hash = Column(String, unique=True, index=True)
     original_format = Column(String)
     artwork_id = Column(Integer, ForeignKey("artworks.id"), nullable=True)
     metadata = Column(JSON)
+    status = Column(Enum(ReleaseStatus), default=ReleaseStatus.DRAFT)
+    rejection_feedback = Column(String, nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     owner = relationship("User", back_populates="tracks")
@@ -93,3 +103,36 @@ class Transaction(Base):
     status = Column(String)
     metadata = Column(JSON)
     delivery = relationship("Delivery", back_populates="transactions")
+
+class StoreAPI(Base):
+    __tablename__ = "store_apis"
+    id = Column(Integer, primary_key=True, index=True)
+    store_name = Column(String, unique=True)
+    api_url = Column(String)
+    api_key = Column(String)
+    api_secret = Column(String, nullable=True)
+    is_active = Column(Integer, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class ArtistProfile(Base):
+    __tablename__ = "artist_profiles"
+    id = Column(Integer, primary_key=True, index=True)
+    artist_name = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    spotify_id = Column(String, nullable=True)
+    apple_music_id = Column(String, nullable=True)
+    youtube_id = Column(String, nullable=True)
+    metadata = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Statement(Base):
+    __tablename__ = "statements"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    period_start = Column(DateTime)
+    period_end = Column(DateTime)
+    total_revenue = Column(Float)
+    total_plays = Column(Integer)
+    status = Column(String, default="draft")
+    statement_data = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
